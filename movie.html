@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moviebazaar</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#111;
+    color:white;
+}
+
+/* Navbar */
+nav{
+    background:#000;
+    color:#e50914;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 40px;
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+nav h1{
+    font-size:32px;
+    font-weight:bold;
+}
+
+nav ul{
+    display:flex;
+    list-style:none;
+    gap:25px;
+}
+
+nav ul li{
+    transition:0.3s;
+}
+
+nav ul li a{
+    color:white;
+    text-decoration:none;
+    font-size:16px;
+    padding:8px 0;
+    display:inline-block;
+    transition:0.3s;
+    position:relative;
+}
+
+nav ul li a::after{
+    content:'';
+    position:absolute;
+    left:0;
+    bottom:-4px;
+    width:0;
+    height:2px;
+    background:#e50914;
+    transition:width 0.3s ease;
+}
+
+nav ul li a:hover{
+    color:#e50914;
+}
+
+nav ul li a:hover::after{
+    width:100%;
+}
+
+/* Hero Section */
+.hero{
+    position:relative;
+    background:url('dhurandhar.jpg') center/cover no-repeat;
+    background-position:center top;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    padding:0 40px;
+    transition: opacity 1s ease;
+}
+
+.hero::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(180deg, rgba(0,0,0,0.30), rgba(0,0,0,0.75));
+    z-index:1;
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    max-width:720px;
+    color:#fff;
+}
+
+.hero-content img{
+    width:220px;
+    height:300px;
+    object-fit:cover;
+    border-radius:12px;
+    display:block;
+    margin-bottom:24px;
+}
+
+.hero-title{
+    font-size:58px;
+    line-height:1.05;
+    margin-bottom:18px;
+}
+
+.hero-desc{
+    color:#dcdcdc;
+    font-size:18px;
+    line-height:1.8;
+    margin-bottom:24px;
+    max-width:640px;
+}
+
+.hero-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px;
+    align-items:center;
+    margin-bottom:28px;
+}
+
+.hero-meta .rating{
+    color:gold;
+    font-size:20px;
+}
+
+.hero-meta .year,
+.hero-meta .genre{
+    color:#ccc;
+    font-size:16px;
+}
+
+.hero-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+    background:#e50914;
+    color:#fff;
+    border:none;
+    padding:16px 30px;
+    border-radius:999px;
+    font-size:18px;
+    cursor:pointer;
+    transition:0.25s;
+    text-decoration:none;
+}
+
+.hero-btn:hover{
+    background:#ff1e28;
+    transform:scale(1.03);
+}
+
+/* Movie Section */
+.movies{
+    padding:40px;
+}
+
+.movies h2{
+    margin-bottom:20px;
+    color:#e50914;
+}
+
+.movie-container{
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+    justify-content:center;
+}
+
+.movie-search{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:30px;
+    flex-wrap:wrap;
+}
+
+.movie-search input{
+    width:320px;
+    max-width:100%;
+    padding:12px 16px;
+    border-radius:10px;
+    border:1px solid #444;
+    background:#111;
+    color:#fff;
+    outline:none;
+}
+
+.movie-search input::placeholder{
+    color:#777;
+}
+
+.search-btn{
+    padding:12px 22px;
+    border:none;
+    border-radius:10px;
+    background:#e50914;
+    color:#fff;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.search-btn:hover{
+    background:#ff1e28;
+}
+
+.card{
+    width:220px;
+    background:#1c1c1c;
+    border-radius:12px;
+    overflow:hidden;
+    transition:0.4s;
+    animation:fadeIn 1s ease;
+    position:relative;
+}
+
+.card:hover{
+    transform:translateY(-10px) scale(1.05);
+    box-shadow:0 0 15px #e50914;
+}
+
+.card img{
+    width:100%;
+    height:300px;
+    object-fit:cover;
+    cursor:pointer;
+}
+
+.play-btn{
+    position:absolute;
+    top:110px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#e50914;
+    color:white;
+    padding:10px 20px;
+    border:none;
+    border-radius:30px;
+    opacity:0;
+    transition:0.4s;
+    cursor:pointer;
+}
+
+.card:hover .play-btn{
+    opacity:1;
+}
+
+.card-content{
+    padding:15px;
+}
+
+.card-content h3{
+    margin-bottom:10px;
+}
+
+.card-content p{
+    font-size:14px;
+    color:#ccc;
+    margin-bottom:10px;
+}
+
+.rating{
+    color:gold;
+}
+
+/* Reviews */
+.review-section{
+    padding:40px;
+    background:#000;
+}
+
+.review-section h2{
+    color:#e50914;
+    margin-bottom:20px;
+}
+
+textarea{
+    width:100%;
+    height:120px;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    resize:none;
+    margin-bottom:15px;
+}
+
+button{
+    padding:12px 25px;
+    border:none;
+    background:#e50914;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#ff1e28;
+}
+
+.watchlist-btn{
+    margin-top:12px;
+    width:100%;
+    background:#222;
+    color:white;
+    border:1px solid #444;
+    border-radius:10px;
+    padding:12px 0;
+}
+
+.watchlist-btn:hover{
+    background:#e50914;
+    color:#000;
+    border-color:#e50914;
+}
+
+.watchlist-btn.added{
+    background:#444;
+    color:#fff;
+    border-color:#444;
+    cursor:default;
+}
+
+.watchlist-btn.added:hover{
+    background:#444;
+}
+
+.watchlist-section{
+    padding:40px;
+    background:#0b0b0b;
+}
+
+.watchlist-section h2{
+    color:#e50914;
+    margin-bottom:20px;
+}
+
+.watchlist-placeholder{
+    color:#ccc;
+}
+
+.watchlist-message{
+    color:#fff;
+    background:rgba(40, 40, 40, 0.9);
+    border:1px solid #444;
+    padding:12px 16px;
+    border-radius:10px;
+    margin-top:18px;
+    max-width:420px;
+    transition:opacity 0.25s ease;
+    opacity:0;
+    display:inline-block;
+}
+
+.watchlist-message.visible{
+    opacity:1;
+}
+
+/* Footer */
+footer{
+    background:#111;
+    text-align:center;
+    padding:20px;
+    color:#aaa;
+}
+
+/* Trailer Popup */
+.popup{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.95);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.popup iframe{
+    width:80%;
+    height:80%;
+    border:none;
+    border-radius:10px;
+}
+
+.close{
+    position:absolute;
+    top:20px;
+    right:30px;
+    font-size:35px;
+    color:white;
+    cursor:pointer;
+}
+
+/* Animation */
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(30px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@media(max-width:768px){
+    nav{
+        flex-direction:column;
+        gap:15px;
+    }
+
+    .hero h2{
+        font-size:32px;
+    }
+
+    .popup iframe{
+        width:95%;
+        height:50%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav>
+    <h1>MovieBazaar</h1>
+    <ul>put all
+        <li><a href="#home">Home</a></li>
+        <li><a href="#movies">Trending Movies</a></li>
+        <li><a href="#watchlist">Watchlist</a></li>
+        <li><a href="#reviews">Top Reviews</a></li>
+    </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="home">
+<div class="hero-content">
+<img id="hero-img" src="dhurandhar the revenge.jpg" alt="Dhurandhar: The Revenge">
+<h2 id="hero-title" class="hero-title">Dhurandhar: The Revenge</h2>
+
+<div class="hero-meta">
+<div class="rating" id="hero-rating">⭐⭐⭐⭐⭐</div>
+<div class="year" id="hero-year">2026</div>
+<div class="genre" id="hero-genre">Action / Thriller</div>
+</div>
+
+<p id="hero-desc" class="hero-desc">
+An underworld epic where a lone vigilante navigates betrayals, espionage,
+and the hunt for revenge to bring justice to a city ruled by crime.
+</p>
+
+<a href="javascript:void(0)" onclick="playTrailer()" class="hero-btn">▶ Watch Trailer</a>
+<button id="hero-watchlist-btn" class="hero-btn watchlist-btn" onclick="addCurrentToWatchlist()">❤️ Add to Watchlist</button>
+</div>
+</section>
+
+<!-- Movies -->
+<section class="movies" id="movies">
+<h2>Trending Movies</h2>
+
+<div class="movie-search">
+    <input id="movieSearchInput" type="text" placeholder="Search popular movies..." onkeydown="if(event.key==='Enter'){searchMovies()}" />
+    <button class="search-btn" onclick="searchMovies()">Search</button>
+</div>
+
+<div id="movieContainer" class="movie-container">
+
+<div class="card">
+<img src="avengers infinity.avif">
+<button class="play-btn" onclick="playTrailer('6ZfuNTqbHE8')">▶ Play</button>
+<div class="card-content">
+<h3>Avengers Infinity War</h3>
+<p>The Avengers fight Thanos.</p>
+<div class="rating">⭐⭐⭐⭐⭐</div>
+<button class="watchlist-btn" data-title="Avengers Infinity War" onclick="addToWatchlist('Avengers Infinity War','avengers infinity.avif','6ZfuNTqbHE8', this)">❤️ Add to Watchlist</button>
+</div>
+</div>
+
+<div class="card">
+<img src="avengers doomsday.jpg">
+<button class="play-btn" onclick="playTrailer('399Ez7WHK5s')">▶ Play</button>
+<div class="card-content">
+<h3>Avengers Doomsday</h3>
+<p>Upcoming Marvel epic battle.</p>
+<div class="rating">⭐⭐⭐⭐⭐</div>
+<button class="watchlist-btn" data-title="Avengers Doomsday" onclick="addToWatchlist('Avengers Doomsday','avengers doomsday.jpg','399Ez7WHK5s', this)">❤️ Add to Watchlist</button>
+</div>
+</div>
+
+<div class="card">
+<img src="avatar.jpg">
+<button class="play-btn" onclick="playTrailer('nb_fFj_0rq8')">▶ Play</button>
+<div class="card-content">
+<h3>Avatar</h3>
+<p>Adventure on Pandora.</p>
+<div class="rating">⭐⭐⭐⭐⭐</div>
+<button class="watchlist-btn" data-title="Avatar" onclick="addToWatchlist('Avatar','avatar.jpg','nb_fFj_0rq8', this)">❤️ Add to Watchlist</button>
+</div>
+</div>
+
+<div class="card">
+<img src="titanic.jpg">
+<button class="play-btn" onclick="playTrailer('I7c1etV7D7g')">▶ Play</button>
+<div class="card-content">
+<h3>Titanic</h3>
+<p>Legendary love story.</p>
+<div class="rating">⭐⭐⭐⭐⭐</div>
+<button class="watchlist-btn" data-title="Titanic" onclick="addToWatchlist('Titanic','titanic.jpg','I7c1etV7D7g', this)">❤️ Add to Watchlist</button>
+</div>
+</div>
+
+<div class="card">
+<img src="3 idiots.webp">
+<button class="play-btn" onclick="playTrailer('K0eDlFX9GMc')">▶ Play</button>
+<div class="card-content">
+<h3>3 Idiots</h3>
+<p>Three friends chasing dreams.</p>
+<div class="rating">⭐⭐⭐⭐</div>
+<button class="watchlist-btn" data-title="3 Idiots" onclick="addToWatchlist('3 Idiots','3 idiots.webp','K0eDlFX9GMc', this)">❤️ Add to Watchlist</button>
+</div>
+</div>
+
+<div class="card">
+<img src="dangal.jpg">
+<button class="play-btn" onclick="playTrailer('x_7YlGv9u1g')">▶ Play</button>
+<div class="card-content">
+<h3>Dangal</h3>
+<p>Father trains champion daughters.</p>
+<div class="rating">⭐⭐⭐⭐⭐</div>
+<button class="watchlist-btn" data-title="Dangal" onclick="addToWatchlist('Dangal','dangal.jpg','x_7YlGv9u1g', this)">❤️ Add to Watchlist</button>
+</div>
+</div>
+
+<div class="card">
+<img src="dhurandhar.jpg">
+<button class="play-btn" onclick="playTrailer('BKOVzHcjEIo')">▶ Play</button>
+<div class="card-content">
+<h3>Dhurandhar</h3>
+<p>Justice and revenge story.</p>
+<div class="rating">⭐⭐⭐⭐⭐</div>
+<button class="watchlist-btn" data-title="Dhurandhar" onclick="addToWatchlist('Dhurandhar','dhurandhar.jpg','BKOVzHcjEIo', this)">❤️ Add to Watchlist</button>
+</div>
+</div>
+
+<div class="card">
+<img src="dilwale.jpg">
+<button class="play-btn" onclick="playTrailer('oIZ4U21DRlM')">▶ Play</button>
+<div class="card-content">
+<h3>Dilwale</h3>
+<p>Romantic action drama.</p>
+<div class="rating">⭐⭐⭐⭐</div>
+<button class="watchlist-btn" data-title="Dilwale" onclick="addToWatchlist('Dilwale','dilwale.jpg','oIZ4U21DRlM', this)">❤️ Add to Watchlist</button>
+</div>
+</div>
+
+<div class="card">
+<img src="gangs of wasseypur.jpg">
+<button class="play-btn" onclick="playTrailer('9ZpPQdrHfl8')">▶ Play</button>
+<div class="card-content">
+<h3>Gangs of Wasseypur</h3>
+<p>Crime and revenge saga.</p>
+<div class="rating">⭐⭐⭐⭐⭐</div>
+<button class="watchlist-btn" data-title="Gangs of Wasseypur" onclick="addToWatchlist('Gangs of Wasseypur','gangs of wasseypur.jpg','9ZpPQdrHfl8', this)">❤️ Add to Watchlist</button>
+</div>
+</div>
+
+<div class="card">
+<img src="SHOLAY.jpg">
+<button class="play-btn" onclick="playTrailer('RDY97iu1_q8')">▶ Play</button>
+<div class="card-content">
+<h3>Sholay</h3>
+<p>Classic action blockbuster.</p>
+<div class="rating">⭐⭐⭐⭐</div>
+<button class="watchlist-btn" data-title="Sholay" onclick="addToWatchlist('Sholay','SHOLAY.jpg','RDY97iu1_q8', this)">❤️ Add to Watchlist</button>
+</div>
+</div>
+
+</div>
+<p id="searchPlaceholder" class="watchlist-placeholder" style="display:none; text-align:center; margin-top:20px;">No matching movies found.</p>
+</section>
+
+<!-- Watchlist -->
+<section class="watchlist-section" id="watchlist">
+<h2>Your Watchlist</h2>
+<div id="watchlistContainer" class="movie-container"></div>
+<p id="watchlistPlaceholder" class="watchlist-placeholder">Your watchlist is empty. Add a movie from Home or Trending Movies.</p>
+<p id="watchlistMessage" class="watchlist-message"></p>
+</section>
+
+<!-- Reviews -->
+<section class="review-section" id="reviews">
+<h2>Public Reviews</h2>
+<textarea placeholder="Write your opinion about movies..."></textarea>
+<br>
+<button>Submit Review</button>
+</section>
+
+<!-- Footer -->
+<footer>
+<p>© 2026 MovieFlix | All Rights Reserved</p>
+</footer>
+
+<!-- Trailer Popup -->
+<div class="popup" id="popup">
+<span class="close" onclick="closeTrailer()">✖</span>
+<iframe id="trailerFrame" allow="autoplay" allowfullscreen></iframe>
+</div>
+
+<script>
+let currentTrailerId = 'NHk7scrb_9I';
+
+const movies = [
+    { img: 'dhurandhar the revenge.jpg', bg: 'dhurandhar.jpg', title: 'Dhurandhar: The Revenge', desc: 'An underworld epic where a lone vigilante navigates betrayals, espionage, and the hunt for revenge to bring justice to a city ruled by crime.', rating: '⭐⭐⭐⭐⭐', year: '2026', genre: 'Action / Thriller', trailer: 'NHk7scrb_9I' },
+    { img: 'avengers infinity.avif', bg: 'avengers infinity.avif', title: 'Avengers Infinity War', desc: 'The Avengers fight Thanos.', rating: '⭐⭐⭐⭐⭐', year: '2018', genre: 'Action / Sci-Fi', trailer: '6ZfuNTqbHE8' },
+    { img: 'avengers doomsday.jpg', bg: 'avengers doomsday.jpg', title: 'Avengers Doomsday', desc: 'Upcoming Marvel epic battle.', rating: '⭐⭐⭐⭐⭐', year: '2026', genre: 'Action / Sci-Fi', trailer: '399Ez7WHK5s' },
+    { img: 'avatar.jpg', bg: 'avatar.jpg', title: 'Avatar', desc: 'Adventure on Pandora.', rating: '⭐⭐⭐⭐⭐', year: '2009', genre: 'Sci-Fi / Adventure', trailer: 'nb_fFj_0rq8' },
+    { img: 'titanic.jpg', bg: 'titanic.jpg', title: 'Titanic', desc: 'Legendary love story.', rating: '⭐⭐⭐⭐⭐', year: '1997', genre: 'Romance / Drama', trailer: 'I7c1etV7D7g' },
+    { img: '3 idiots.webp', bg: '3 idiots.webp', title: '3 Idiots', desc: 'Three friends chasing dreams.', rating: '⭐⭐⭐⭐', year: '2009', genre: 'Comedy / Drama', trailer: 'K0eDlFX9GMc' },
+    { img: 'dangal.jpg', bg: 'dangal.jpg', title: 'Dangal', desc: 'Father trains champion daughters.', rating: '⭐⭐⭐⭐⭐', year: '2016', genre: 'Sports / Drama', trailer: 'x_7YlGv9u1g' },
+    { img: 'dhurandhar.jpg', bg: 'dhurandhar.jpg', title: 'Dhurandhar', desc: 'Justice and revenge story.', rating: '⭐⭐⭐⭐⭐', year: '2024', genre: 'Action / Thriller', trailer: 'BKOVzHcjEIo' },
+    { img: 'dilwale.jpg', bg: 'dilwale.jpg', title: 'Dilwale', desc: 'Romantic action drama.', rating: '⭐⭐⭐⭐', year: '2015', genre: 'Romance / Action', trailer: 'oIZ4U21DRlM' },
+    { img: 'gangs of wasseypur.jpg', bg: 'gangs of wasseypur.jpg', title: 'Gangs of Wasseypur', desc: 'Crime and revenge saga.', rating: '⭐⭐⭐⭐⭐', year: '2012', genre: 'Crime / Drama', trailer: '9ZpPQdrHfl8' },
+    { img: 'SHOLAY.jpg', bg: 'SHOLAY.jpg', title: 'Sholay', desc: 'Classic action blockbuster.', rating: '⭐⭐⭐⭐', year: '1975', genre: 'Action / Drama', trailer: 'RDY97iu1_q8' }
+];
+
+let currentIndex = 0;
+let watchlistMovies = [];
+
+function changeMovie() {
+    const movie = movies[currentIndex];
+    const hero = document.querySelector('.hero');
+    
+    hero.style.opacity = '0';
+    setTimeout(() => {
+        document.getElementById('hero-img').src = movie.img;
+        document.getElementById('hero-img').alt = movie.title;
+        document.getElementById('hero-title').textContent = movie.title;
+        document.getElementById('hero-desc').textContent = movie.desc;
+        document.getElementById('hero-rating').textContent = movie.rating;
+        document.getElementById('hero-year').textContent = movie.year;
+        document.getElementById('hero-genre').textContent = movie.genre;
+        hero.style.backgroundImage = `url('${movie.bg}')`;
+        currentTrailerId = movie.trailer;
+        hero.style.opacity = '1';
+        updateHeroWatchlistButton();
+    }, 500);
+}
+
+function addToWatchlist(title, img, trailer, button) {
+    if (watchlistMovies.some(movie => movie.title === title)) {
+        if (button) {
+            button.textContent = 'Already in Watchlist';
+            button.disabled = true;
+            button.classList.add('added');
+        }
+        return;
+    }
+
+    watchlistMovies.push({ title, img, trailer });
+    renderWatchlist();
+
+    if (button) {
+        button.textContent = 'Added to Watchlist';
+        button.disabled = true;
+        button.classList.add('added');
+    }
+    markWatchlistButtons(title);
+    updateHeroWatchlistButton();
+}
+
+function addCurrentToWatchlist() {
+    const movie = movies[currentIndex];
+    if (movie) {
+        addToWatchlist(movie.title, movie.img, movie.trailer, document.getElementById('hero-watchlist-btn'));
+    }
+}
+
+function markWatchlistButtons(title) {
+    document.querySelectorAll('.watchlist-btn').forEach(btn => {
+        if (btn.dataset.title === title) {
+            btn.textContent = 'Added to Watchlist';
+            btn.disabled = true;
+            btn.classList.add('added');
+        }
+    });
+}
+
+function restoreWatchlistButtons(title) {
+    document.querySelectorAll('.watchlist-btn').forEach(btn => {
+        if (btn.dataset.title === title) {
+            btn.textContent = '❤️ Add to Watchlist';
+            btn.disabled = false;
+            btn.classList.remove('added');
+        }
+    });
+}
+
+function updateHeroWatchlistButton() {
+    const heroBtn = document.getElementById('hero-watchlist-btn');
+    const title = document.getElementById('hero-title').textContent;
+    if (!heroBtn) return;
+
+    if (watchlistMovies.some(movie => movie.title === title)) {
+        heroBtn.textContent = 'Added to Watchlist';
+        heroBtn.disabled = true;
+        heroBtn.classList.add('added');
+    } else {
+        heroBtn.textContent = '❤️ Add to Watchlist';
+        heroBtn.disabled = false;
+        heroBtn.classList.remove('added');
+    }
+}
+
+function searchMovies() {
+    const query = document.getElementById('movieSearchInput').value.trim().toLowerCase();
+    const cards = document.querySelectorAll('#movieContainer .card');
+    const placeholder = document.getElementById('searchPlaceholder');
+    let found = 0;
+
+    cards.forEach(card => {
+        const title = card.querySelector('.card-content h3').textContent.toLowerCase();
+        const match = title.includes(query);
+        card.style.display = query && !match ? 'none' : '';
+        if (match) found += 1;
+    });
+
+    if (!query) {
+        placeholder.style.display = 'none';
+        return;
+    }
+
+    placeholder.style.display = found === 0 ? 'block' : 'none';
+}
+
+function renderWatchlist() {
+    const container = document.getElementById('watchlistContainer');
+    const placeholder = document.getElementById('watchlistPlaceholder');
+
+    container.innerHTML = '';
+
+    if (watchlistMovies.length === 0) {
+        placeholder.style.display = 'block';
+        return;
+    }
+
+    placeholder.style.display = 'none';
+
+    watchlistMovies.forEach(movie => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <img src="${movie.img}" alt="${movie.title}">
+            <button class="play-btn" onclick="playTrailer('${movie.trailer}')">▶ Play</button>
+            <div class="card-content">
+                <h3>${movie.title}</h3>
+                <div class="rating">In Watchlist</div>
+                <button class="watchlist-btn" onclick="removeFromWatchlist('${movie.title}')">Remove from Watchlist</button>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function showWatchlistMessage(text) {
+    const message = document.getElementById('watchlistMessage');
+    if (!message) return;
+    message.textContent = text;
+    message.classList.add('visible');
+    clearTimeout(message.hideTimeout);
+    message.hideTimeout = setTimeout(() => {
+        message.classList.remove('visible');
+    }, 2500);
+}
+
+function removeFromWatchlist(title) {
+    watchlistMovies = watchlistMovies.filter(movie => movie.title !== title);
+    restoreWatchlistButtons(title);
+    renderWatchlist();
+    updateHeroWatchlistButton();
+    showWatchlistMessage(`Removed "${title}" from your watchlist.`);
+}
+
+setInterval(() => {
+    currentIndex = (currentIndex + 1) % movies.length;
+    changeMovie();
+}, 5000);
+
+function playTrailer(){
+    document.getElementById("popup").style.display="flex";
+    document.getElementById("trailerFrame").src=
+    "https://www.youtube.com/embed/" + currentTrailerId + "?autoplay=1";
+}
+
+function closeTrailer(){
+    document.getElementById("popup").style.display="none";
+    document.getElementById("trailerFrame").src="";
+}
+</script>
+
+</body>
+</html>
